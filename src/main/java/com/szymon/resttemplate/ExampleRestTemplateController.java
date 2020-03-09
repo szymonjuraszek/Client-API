@@ -3,6 +3,7 @@ package com.szymon.resttemplate;
 import com.szymon.exceptionHandler.ExampleNotFoundException;
 import com.szymon.model.Example;
 import com.szymon.resttemplate.urls.ExampleURL;
+import org.apache.logging.log4j.util.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -10,9 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "/template")
@@ -44,9 +43,12 @@ public class ExampleRestTemplateController {
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<Example>>() {
                         });
 
-        if(response.hasBody()) {
+        if(!response.hasBody()) {
             throw new ExampleNotFoundException("Nie znaleziono zadnych rekordow");
         }
+
+        Collections.sort(response.getBody(), Comparator.comparing(Example::getName)
+                .thenComparing(Example::getValue));
 
         return ResponseEntity.ok(response.getBody());
     }
@@ -64,7 +66,7 @@ public class ExampleRestTemplateController {
     // Jak nie ma za duzo custom exception mozna tak robic. Ale przy wiekszej liczbie uzyc "@CustomAdvice"
 
     @GetMapping(path = "/examples/{id}")
-    public ResponseEntity<Example> getExample(@PathVariable Long id) {
+    public ResponseEntity<Example> getExample(@RequestParam(required = false) String name, @PathVariable Long id) {
         ResponseEntity<Example> response = restTemplate.getForEntity(ExampleURL.MAIN_URL + "examples/" + id, Example.class);
 
         return Optional
