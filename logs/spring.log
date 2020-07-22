@@ -1,0 +1,6 @@
+2020-03-05 14:58:02.126  INFO 9824 --- [main] c.szymon.ApiAplicationApplicationTests   : Starting ApiAplicationApplicationTests on DESKTOP-TRSEJCV with PID 9824 (started by szymo in C:\Users\szymo\IntelliJIDEAProjects\API-To-Hibernate-Example)
+2020-03-05 14:58:02.129  INFO 9824 --- [main] c.szymon.ApiAplicationApplicationTests   : No active profile set, falling back to default profiles: default
+2020-03-05 14:58:06.470  INFO 9824 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-03-05 14:58:07.321  INFO 9824 --- [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2020-03-05 14:58:07.460  INFO 9824 --- [main] c.szymon.ApiAplicationApplicationTests   : Started ApiAplicationApplicationTests in 5.821 seconds (JVM running for 7.15)
+2020-03-05 14:58:08.126  INFO 9824 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'

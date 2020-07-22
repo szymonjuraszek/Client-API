@@ -1,6 +1,8 @@
 package com.szymon.model;
 
 import lombok.Data;
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
 
 @Data
 public class Example {

@@ -24,12 +24,12 @@ class FirstBeanExampleTest {
         firstBeanExample = new FirstBeanExample(secondBeanExample);
     }
 
-//    verify sprawdza ile razy zostala wykonanan dana metoda
+    //    verify sprawdza ile razy zostala wykonanan dana metoda
     @Test
     void getValue() {
         firstBeanExample.getValue();
         firstBeanExample.getValue();
 
-        verify(secondBeanExample,times(2)).someMethod();
+        verify(secondBeanExample, times(2)).someMethod();
     }
 }

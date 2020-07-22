@@ -5,12 +5,16 @@ import com.szymon.model.Example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +54,7 @@ public class WebClientExampleController {
                 .bodyToMono(Example.class)
                 .block());
 
-        if(!result.isPresent()) {
+        if (!result.isPresent()) {
             throw new ExampleNotFoundException("Not found Example by id-" + id);
         }
 
@@ -58,14 +62,32 @@ public class WebClientExampleController {
     }
 
     @PostMapping(path = "/examples")
-    public Example addExample(@RequestBody Example example) {
-        Example result = webClient.post()
-                .uri("http://localhost:8888/examples")
-                .syncBody(example)
-                .retrieve()
-                .bodyToMono(Example.class)
-                .block();
+    public void addExample(@RequestBody Example example) {
+        logger.info("WebClient before POST request (one object)");
 
-        return result;
+        Mono<ClientResponse> response = webClient.post()
+                .uri("http://localhost:8888/examples")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .bodyValue(example)
+                .exchange();
+
+        //        System.out.println(response.block().toEntity(Example.class).block().getBody());
+        //        return response.block().toEntity(Example.class).block().getBody();
+        response.block().headers().asHttpHeaders().entrySet().stream().forEach(System.out::println);
+    }
+
+    @PostMapping(path = "/examples/list")
+    public void addExample(@RequestBody List<Example> examples) {
+        logger.info("WebClient before POST request (many objects)");
+
+        Mono<ClientResponse> response2 = webClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/examples/list")
+                        .build())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Flux.just(examples), List.class)
+                .exchange();
+
+        System.out.println(response2.block().bodyToFlux(Example.class).blockFirst());
     }
 }
